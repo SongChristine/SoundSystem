@@ -17,16 +17,13 @@ public class SoundSystem : MonoBehaviour
 
     private void Start()
     {
-        // Initialize the sliders and toggle
         backgroundMusicSlider.value = PlayerPrefs.GetFloat("BackgroundMusicVolume", 1f);
         soundEffectsSlider.value = PlayerPrefs.GetFloat("SoundEffectsVolume", 1f);
         muteToggle.isOn = PlayerPrefs.GetInt("IsMuted", 0) == 1;
 
-        // Save the initial volumes
         initialBackgroundMusicVolume = backgroundMusicAudioSource.volume;
         initialSoundEffectsVolume = soundEffectsAudioSource.volume;
 
-        // Add listeners to UI elements
         backgroundMusicSlider.onValueChanged.AddListener(ChangeBackgroundMusicVolume);
         soundEffectsSlider.onValueChanged.AddListener(ChangeSoundEffectsVolume);
         muteToggle.onValueChanged.AddListener(ToggleMute);
