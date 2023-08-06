@@ -2523,7 +2523,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backgroundMusicAudioSource: {fileID: 941314277}
+<<<<<<< HEAD
   soundEffectsAudioSource: {fileID: 1094695997}
+=======
+  soundEffectsAudioSource: {fileID: 1648181960}
+>>>>>>> main
   backgroundMusicSlider: {fileID: 1978943235}
   soundEffectsSlider: {fileID: 1680683689}
   muteToggle: {fileID: 1782486447}
