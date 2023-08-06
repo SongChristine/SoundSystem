@@ -5,39 +5,61 @@ using UnityEngine.UI;
 
 public class SoundSystem : MonoBehaviour
 {
-    public Slider masterVolumeSlider;
-    public Slider sfxVolumeSlider;
+    public AudioSource backgroundMusicAudioSource;
+    public AudioSource soundEffectsAudioSource;
+
+    public Slider backgroundMusicSlider;
+    public Slider soundEffectsSlider;
     public Toggle muteToggle;
+
+    private float initialBackgroundMusicVolume;
+    private float initialSoundEffectsVolume;
 
     private void Start()
     {
-        // Load saved audio settings or set default values
-        masterVolumeSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1f);
-        sfxVolumeSlider.value = PlayerPrefs.GetFloat("sfxVolume", 1f);
-        muteToggle.isOn = PlayerPrefs.GetInt("Mute", 0) == 1;
+        // Initialize the sliders and toggle
+        backgroundMusicSlider.value = PlayerPrefs.GetFloat("BackgroundMusicVolume", 1f);
+        soundEffectsSlider.value = PlayerPrefs.GetFloat("SoundEffectsVolume", 1f);
+        muteToggle.isOn = PlayerPrefs.GetInt("IsMuted", 0) == 1;
 
-        // Add listeners for UI events
-        masterVolumeSlider.onValueChanged.AddListener(OnMasterVolumeChanged);
-        sfxVolumeSlider.onValueChanged.AddListener(OnsfxVolumeChanged);
-        muteToggle.onValueChanged.AddListener(OnMuteToggleChanged);
+        // Save the initial volumes
+        initialBackgroundMusicVolume = backgroundMusicAudioSource.volume;
+        initialSoundEffectsVolume = soundEffectsAudioSource.volume;
+
+        // Add listeners to UI elements
+        backgroundMusicSlider.onValueChanged.AddListener(ChangeBackgroundMusicVolume);
+        soundEffectsSlider.onValueChanged.AddListener(ChangeSoundEffectsVolume);
+        muteToggle.onValueChanged.AddListener(ToggleMute);
     }
 
-    private void OnMasterVolumeChanged(float volume)
+    private void ChangeBackgroundMusicVolume(float volume)
     {
-        AudioListener.volume = volume;
-        PlayerPrefs.SetFloat("MasterVolume", volume);
+        backgroundMusicAudioSource.volume = volume;
+        PlayerPrefs.SetFloat("BackgroundMusicVolume", volume);
     }
 
-    private void OnsfxVolumeChanged(float volume)
+    private void ChangeSoundEffectsVolume(float volume)
     {
-        // Adjust sound effects volume using your custom AudioManager or AudioMixer
-        // For example: AudioManager.Instance.SetSoundEffectsVolume(volume);
+        soundEffectsAudioSource.volume = volume;
         PlayerPrefs.SetFloat("SoundEffectsVolume", volume);
     }
 
-    private void OnMuteToggleChanged(bool isMuted)
+    private void ToggleMute(bool isMuted)
     {
-        AudioListener.volume = isMuted ? 0f : masterVolumeSlider.value;
-        PlayerPrefs.SetInt("Mute", isMuted ? 1 : 0);
+        backgroundMusicAudioSource.mute = isMuted;
+        soundEffectsAudioSource.mute = isMuted;
+
+        PlayerPrefs.SetInt("IsMuted", isMuted ? 1 : 0);
+
+        if (isMuted)
+        {
+            backgroundMusicSlider.value = 0f;
+            soundEffectsSlider.value = 0f;
+        }
+        else
+        {
+            backgroundMusicSlider.value = initialBackgroundMusicVolume;
+            soundEffectsSlider.value = initialSoundEffectsVolume;
+        }
     }
 }
